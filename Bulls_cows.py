@@ -23,13 +23,25 @@ def search_for_duplicates(number: str):
             duplicates = True
             break
     return duplicates
+
+def find_bulls_cows(number: str):
+    bulls = 0
+    cows = 0
+    for cipher1, cipher2 in zip(number, win_number):
+        if cipher1 == cipher2:
+            bulls += 1
+    for cipher1 in number:
+        if cipher1 in win_number:
+            cows += 1
+    cows -= bulls
+    return bulls, cows
             
 
 # pozdrav
 print("Hi there!")
 print(delim)
-print("I've generated a random 4 digit number for you."
-      "Let's play a bulls and cows game.")
+print('''I've generated a random 4 digit number for you."
+"Let's play a bulls and cows game.''')
 print(delim)
 
 # generování náhodného 4 místného čísla abcd, které nezačíná nulou
@@ -48,8 +60,6 @@ all_nubers.remove(c)
 d = choice(all_nubers)
 
 win_number = str(a) + str(b) + str(c) +str(d)
-win_number = int(win_number)
-print(win_number)
 
 # hra
 
@@ -57,23 +67,55 @@ print(win_number)
 conditions = False
 while conditions == False:
     print("Enter a number:")
-    delim = "-" * 40
-    player_num = input()
+    print(delim)
+    player_num = input(">>> ")
 
 ## Ověření vstupu od uživatele
     if not player_num.isnumeric():
         print("Incorect input. All symbols must be numeric.")
-
+        print(delim)
     elif len(player_num) != 4:
         print("Incorect input lenght. The input has to contain exactly 4 numbers.")
-    
+        print(delim)
     elif search_for_duplicates(player_num):
         print("Incorect input. All 4 numbers must be unique.")
-    
+        print(delim)
     elif player_num[0] == "0":
         print("Incorect input. First number can't be 0.")
-    
+        print(delim)   
     else:
         conditions = True
 
-print("Good input.")
+## vlastní hra
+n_try = 1
+n_bulls, n_cows = find_bulls_cows(player_num)
+if n_bulls == 1:
+    bull_ = "bull"
+else:
+    bull_ = "bulls"
+if n_cows == 1:
+    cow_ = "cow"
+else:
+    cow_ = "cows"
+print(n_bulls, bull_ + ",", n_cows, cow_)
+print(delim)
+while n_bulls < 4:
+    player_num = input(">>> ")
+    delim = "-" * 40
+    n_bulls, n_cows = find_bulls_cows(player_num)
+    if n_bulls == 1:
+        bull_ = "bull"
+    else:
+        bull_ = "bulls"
+    if n_cows == 1:
+        cow_ = "cow"
+    else:
+        cow_ = "cows"
+    print(n_bulls, bull_ + ",", n_cows, cow_)
+    print(delim)
+    n_try += 1
+
+else:
+    print("Correct, you've guessed the right number\nin", n_try, "guesses!")
+    print(delim)
+    print("That's amazing!")
