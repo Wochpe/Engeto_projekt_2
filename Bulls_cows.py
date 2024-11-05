@@ -9,10 +9,12 @@ from random import randint, choice
 
 delim = "-" * 40
 
-def search_for_duplicates(number: str):
+def search_for_duplicates(number: str) -> bool:
     '''
-    Verifies presence of duplicates in a string of numbers.
-    Returns bool: True for presence at least one duplicite number, False for all unique numbers.
+    Verifies presence of duplicates in a number: str.
+    Returns duplicates: bool
+    >>> True for presence at least one duplicite number.
+    >>> False for presence only unique numbers.
     '''
     num_list = []
     for digit in number:
@@ -24,7 +26,7 @@ def search_for_duplicates(number: str):
             break
     return duplicates
 
-def find_bulls_cows(number: str):
+def find_bulls_cows(number: str) -> int:
     bulls = 0
     cows = 0
     for cipher1, cipher2 in zip(number, win_number):
@@ -99,6 +101,7 @@ else:
     cow_ = "cows"
 print(n_bulls, bull_ + ",", n_cows, cow_)
 print(delim)
+
 while n_bulls < 4:
     player_num = input(">>> ")
     delim = "-" * 40
