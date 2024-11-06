@@ -64,15 +64,12 @@ d = choice(all_nubers)
 win_number = str(a) + str(b) + str(c) +str(d)
 
 # hra
-
-
-conditions = False
-while conditions == False:
-    print("Enter a number:")
-    print(delim)
+print("Enter a number:")
+print(delim)
+n_bulls = 0
+n_try = 1
+while n_bulls < 4:
     player_num = input(">>> ")
-
-## Ověření vstupu od uživatele
     if not player_num.isnumeric():
         print("Incorect input. All symbols must be numeric.")
         print(delim)
@@ -86,37 +83,18 @@ while conditions == False:
         print("Incorect input. First number can't be 0.")
         print(delim)   
     else:
-        conditions = True
-
-## vlastní hra
-n_try = 1
-n_bulls, n_cows = find_bulls_cows(player_num)
-if n_bulls == 1:
-    bull_ = "bull"
-else:
-    bull_ = "bulls"
-if n_cows == 1:
-    cow_ = "cow"
-else:
-    cow_ = "cows"
-print(n_bulls, bull_ + ",", n_cows, cow_)
-print(delim)
-
-while n_bulls < 4:
-    player_num = input(">>> ")
-    delim = "-" * 40
-    n_bulls, n_cows = find_bulls_cows(player_num)
-    if n_bulls == 1:
-        bull_ = "bull"
-    else:
-        bull_ = "bulls"
-    if n_cows == 1:
-        cow_ = "cow"
-    else:
-        cow_ = "cows"
-    print(n_bulls, bull_ + ",", n_cows, cow_)
-    print(delim)
-    n_try += 1
+        n_bulls, n_cows = find_bulls_cows(player_num)
+        if n_bulls == 1:
+            bull_ = "bull"
+        else:
+            bull_ = "bulls"
+        if n_cows == 1:
+            cow_ = "cow"
+        else:
+            cow_ = "cows"
+        print(n_bulls, bull_ + ",", n_cows, cow_)
+        print(delim)
+        n_try += 1
 
 else:
     print("Correct, you've guessed the right number\nin", n_try, "guesses!")
