@@ -10,38 +10,68 @@ discord: karolinamach
 delim1 = 40 * "-"
 delim2 = 40 * "="
 
-def print_playing_field(chosen_fied: int, player_symbol: str):
-    if chosen_fied not in range(1,10):
+def evaluate_input(chosen_field:str) -> bool:
+    if not chosen_field.isnumeric():
+        print("Incorrect input, please enter a number.")
+        correct_input = False
+    elif int(chosen_field) not in range(1,10):
         print("Incorrect field number, please choose number from 1 to 9.")
+        correct_input = False
     else:
-        x = 1
-        for field in mark:
-            if x == chosen_fied and mark[(x-1)] != " ":
-                print("This field is already occupied.")
-                break
-            elif x == chosen_fied:
-                mark[(x-1)] = player_symbol
-                break
-            else:
-                x += 1
-        print("+---+---+---+")
-        print("| " + mark[0] + " | " + mark[1] + " | " + mark[2] + " |")
-        print("+---+---+---+")
-        print("| " + mark[3] + " | " + mark[4] + " | " + mark[5] + " |")
-        print("+---+---+---+")
-        print("| " + mark[6] + " | " + mark[7] + " | " + mark[8] + " |")
-        print("+---+---+---+")
-    return mark
+        correct_input = True
+    return correct_input
+
+def evaluate_empty_field(chosen_field:int,  symbols: list) -> bool:
+    x = 1
+    for field in symbols:
+        if x == chosen_field and symbols[(x-1)] != " ":
+            empty = False
+            break
+        else:
+            x += 1
+            empty = True
+    return empty
+
+def print_playing_fields(chosen_field: int, player_symbol: str, symbols: list):
+    x = 1
+    for field in symbols:
+        if x == chosen_field:
+            symbols[(x-1)] = player_symbol
+            break
+        else:
+            x += 1
+    print("+---+---+---+")
+    print("| " + symbols[0] + " | " + symbols[1] + " | " + symbols[2] + " |")
+    print("+---+---+---+")
+    print("| " + symbols[3] + " | " + symbols[4] + " | " + symbols[5] + " |")
+    print("+---+---+---+")
+    print("| " + symbols[6] + " | " + symbols[7] + " | " + symbols[8] + " |")
+    print("+---+---+---+")
+    return symbols
+
+def evaluete_winner(winning_sequence: list, symbols: list) -> bool:
+    row = [list(symbols[:3]), list(symbols[3:6]), list(symbols[5:9])]
+    column = [list(symbols[:9:3]), list(symbols[1:9:3]), list(symbols[2:9:3])]
+    diagonal = [list(symbols[2:8:2]), list(symbols[:9:4])]
+    if winning_sequence in row:
+        win = True
+    elif winning_sequence in column:
+        win = True
+    elif winning_sequence in diagonal:
+        win = True
+    else:
+        win = False
+    return win
 
 # Hra
 ## Přivítání
 print("Welcome to Tic Tac Toe")
 print(delim2)
 print('''GAME RULES:
-Each player can place one mark (or stone)
+Each player can place one symbol (or stone)
 per turn on the 3x3 grid. The WINNER is
 who succeeds in placing three of their
-marks in a:
+symbols in a:
 * horizontal,
 * vertical or
 * diagonal row''')
@@ -50,35 +80,50 @@ print("Let's start the game")
 print(delim1)
 
 ## Prázdná hrací plocha
-mark = 9 *[" "]
-mark = (print_playing_field(1, " "))
+fields= 9 *[" "]
+symbols = (print_playing_fields(1, " ", fields))
 
-## Vlastní hra
+## Výherní sekvence
 win_O = 3 * ["O"]
 win_X = 3 * ["X"]
-row = mark[:2] or mark[3:6] or mark[5:9]
-column = mark[:9, 3] or mark[1:9, 3] or mark[2:9, 3]
-diagonal = mark[2, 4, 6] or mark[1, 4, 8]
+
+## Vlastní hra
 winner = "unknown"
 while winner == "unknown":
-    if win_O != row or column or diagonal:
-        print(delim2)
-        player_O = int(input("Player O | Please enter your move number: "))
-        mark = (print_playing_field(player_O, "O"))
-        print(delim2)
-    else:
+    print(delim2)
+    while not evaluete_winner(win_O, symbols):
+        player_O = input("Player O | Please enter your move number: ")
+        if not evaluate_input(player_O):
+            continue
+        elif not evaluate_empty_field(int(player_O), symbols):
+            print("This field is already occupied.")
+            continue           
+        elif not evaluete_winner(win_O, symbols):
+            symbols = print_playing_fields(int(player_O), "O", symbols)
+            print(delim2)
+            break
+        else:
+            break
+    if evaluete_winner(win_O, symbols):
         winner = "Player 0"
         break
-    if win_X != row or column or diagonal:
-        print(delim2)
-        player_X = int(input("Player X | Please enter your move number: "))
-        mark = (print_playing_field(player_X, "X"))
-        print(delim2)
-    else:
+
+            
+    while not evaluete_winner(win_X, symbols):
+        player_X = input("Player X | Please enter your move number: ")
+        if not evaluate_input(player_X):
+            continue
+        elif not evaluate_empty_field(int(player_X), symbols):
+            print("This field is already occupied.")
+            continue           
+        elif not evaluete_winner(win_X, symbols):
+            symbols = (print_playing_fields(int(player_X), "X", symbols))
+            print(delim2)
+            break
+        else:
+            break
+    if evaluete_winner(win_X, symbols):
         winner = "Player X"
         break
+        
 print("Congratulation", winner)
-
-
-# player_X = input("Player X | Please enter your move number: ")
-# print(delim2)
